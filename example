@@ -1,0 +1,20 @@
+wb = load_workbook('1.xlsx')
+ws = wb.active
+
+
+dict1 = {}
+for i in range(2, ws.max_row + 1):
+	if ws.cell(row=i,column=1).value != None:
+		dict1[ws.cell(row=i,column=1).value] = ws.cell(row=i,column=2).value
+
+for i in range(2, ws.max_row + 1):
+	count = 0
+	if dict1.has_key(ws.cell(row=i,column=8).value):
+		count += dict1[ws.cell(row=i,column=8).value]
+	if dict2.has_key(ws.cell(row=i,column=8).value):
+		count += dict2[ws.cell(row=i,column=8).value]
+	if dict3.has_key(ws.cell(row=i,column=8).value):
+		count += dict3[ws.cell(row=i,column=8).value]
+	ws.cell(row=i,column=9).value = count
+
+wb.save('output.xlsx')
