@@ -5,6 +5,9 @@
 # Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
+############### Revison history ####################
+# verison :1.0  built on 2017.10.22
+
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import *
 import workflow
@@ -50,6 +53,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.label = QtGui.QLabel(MainWindow)
         self.label.setGeometry(QtCore.QRect(640, 25, 121, 21))
         self.label.setObjectName(_fromUtf8("label"))
+        self.label_version = QtGui.QLabel(MainWindow)
+        self.label_version.setGeometry(QtCore.QRect(850, 820, 250, 15))
+        self.label_version.setObjectName(_fromUtf8("label"))
         #self.pushButton = QtGui.QPushButton(self.centralwidget)
         #self.pushButton.setGeometry(QtCore.QRect(850, 20, 112, 34))
         #self.pushButton.setObjectName(_fromUtf8("pushButton"))
@@ -92,6 +98,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         #self.pushButton.setText(_translate("MainWindow", "Brower", None))
         self.lineEdit.setText(_translate("Dialog", "统计值.xlsx", None))
         self.label.setText(_translate("Dialog", "TargetFileName：", None))
+        self.label_version.setText(_translate("Dialog", "Version: 1.0, built on 20171022", None))
 
     def browse(self):
         #fileName = QtGui.QFileDialog.getOpenFileName(self, "Open File", '.',"HTML Files (*.htm *.html)")
