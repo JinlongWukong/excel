@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+############### Revison history ####################
+# verison :1.0  built on 2017.10.22
+
 from openpyxl import load_workbook
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
@@ -50,7 +53,15 @@ def worker(sourceFile,targetFile):
             pos = len(ws2[1]) - 2 + 1
         statistic_pos = pos + 1
         evaluate_pos = pos + 2
-    city_list = ['安阳','包头','保定','北海','北京','常州','郴州','成都','赤峰','大连','大庆','大同','丹东','东莞','东营','佛山','福清','福州','抚顺','广元','贵阳','桂林','哈尔滨','汉中','杭州','合肥','衡阳','呼和浩特','淮北','淮南','鸡西','吉林','济南','济宁','佳木斯','江门','江阴','金华','晋城','晋江','荆门','荆州','昆明','兰州','临汾','临淄','柳州','龙岩','洛阳','马鞍山','绵阳','牡丹江','南京','南宁','南通','宁波','宁德','盘锦','莆田','齐齐哈尔','青岛','青岛骑士30','泉州','厦门','绍兴','沈阳','石家庄','寿光','四木','台州','太原','泰州','唐山','天津','天津骑士30','铜陵','万州','威海','潍坊','温州','无锡','芜湖','武汉','西安','湘潭','徐州','烟台','延吉','宜昌','宜兴','银川','营口','湛江','漳州','长春','长沙','镇江','重庆','株洲','淄博']
+    #city_list = ['安阳','包头','保定','北海','北京','常州','郴州','成都','赤峰','大连','大庆','大同','丹东','东莞','东营','佛山','福清','福州','抚顺','广元','贵阳','桂林','哈尔滨','汉中','杭州','合肥','衡阳','呼和浩特','淮北','淮南','鸡西','吉林','济南','济宁','佳木斯','江门','江阴','金华','晋城','晋江','荆门','荆州','昆明','兰州','临汾','临淄','柳州','龙岩','洛阳','马鞍山','绵阳','牡丹江','南京','南宁','南通','宁波','宁德','盘锦','莆田','齐齐哈尔','青岛','青岛骑士30','泉州','厦门','绍兴','沈阳','石家庄','寿光','四木','台州','太原','泰州','唐山','天津','天津骑士30','铜陵','万州','威海','潍坊','温州','无锡','芜湖','武汉','西安','湘潭','徐州','烟台','延吉','宜昌','宜兴','银川','营口','湛江','漳州','长春','长沙','镇江','重庆','株洲','淄博']
+    city_list = ['漳州', '赤峰', '丹东', '福清', '抚顺', '衡阳', '惠州', '哈尔滨', '汉中', '济南', '济宁', '佳木斯', '晋城', '荆州', '洛阳', '南京', '南宁',
+                 '莆田', '绍兴', '沈阳', '寿光', '苏州 ', '台州', '太原', '泰州', '铜陵', '万州', '徐州', '宜昌', '宜兴', '银川', '泉州', '江阴', '蚌埠',
+                 '大连', '吉林', '长春', '镇江', '厦门', '淮北', '西安', '桂林', '唐山', '威海', '马鞍山', '东莞', '北京', '金华', '郑州', '大庆', '杭州',
+                 '宁波', '石家庄', '无锡', '大同', '东营', '保定', '广元', '合肥', '佛山', '长沙', '昆明', '潍坊', '兰州', '广州', '呼和浩特', '龙岩',
+                 '南通', '通辽', '江门', '福州', '延吉', '营口', '盘锦', '绵阳', '淄博', '株洲', '安阳', '重庆', '包头', '成都', '常州', '贵阳', '芜湖',
+                 '临淄', '牡丹江', '鸡西', '湛江', '齐齐哈尔', '淮南', '番禺', '义乌', '荆门', '柳州', '淮安', '温州', '武汉', '北海', '湘潭', '临汾',
+                 '西宁', '日照', '滨州', '南昌', '晋中', '益阳', '宁德', '青岛', '天津']
+
 
     # clear old columns data
     clear_columns(ws2, pos)
@@ -111,7 +122,7 @@ def worker(sourceFile,targetFile):
     statistic_data = {}
     for i in [cell.value for cell in ws2[1] if cell.value not in [u'统计',u'满报值']]:
         ws_temp = target_wb.get_sheet_by_name(i)
-        item = collections.Counter()
+        item = collections.defaultdict(defaultdict_value)
         for j in range(3, ws_temp.max_row + 1):
             item[ws_temp['B' + str(j)].value] = ws_temp['N' + str(j)].value
         statistic_data[i] = item
@@ -136,20 +147,26 @@ def worker(sourceFile,targetFile):
     print("Work done, save as: " + targetFile)
     return True
 
+# clear the whole columns
 def clear_columns(sheet, pos):
     for i in sheet.rows:
         i[pos-1].value = None
 
+# define defaut value for Collectons.defaultdict
+def defaultdict_value():
+    return 0
+
+# search the position of given keyword(only unicode support), return the first occurence position by default
+# you can give any value to count, it will return expect count position if have, given 'ALL' means return all position
 def locateKeyword(sheet, keyword, count=1):
     result = []
     for i in range(1, sheet.max_row + 1):
         for j in range(1, sheet.max_column + 1):
             if isinstance(sheet.cell(row=i, column=j).value, unicode) and re.search(keyword,sheet.cell(row=i, column=j).value) or sheet.cell(row=i, column=j).value == keyword:
-                if count == 1:
-                    return i,j
-                else:
-                    result.append((i,j))
-    return result
+                if count == 1: return i,j
+                else: result.append((i,j))
+    if count == 'ALL' : return result
+    else: return result[:count]
 
 def parseSourceFile(sheet):
     city_column = locateKeyword(sheet,u'城市名')
@@ -190,13 +207,14 @@ def buildMoiveSheet(sheet,all_dic):
 
     shift = 3
     num = 1  # 编号
+
     for city in all_dic.iterkeys():
         sheet.cell(row=shift, column=1).value = num
         sheet.cell(row=shift, column=2).value = city
         sheet.cell(row=shift, column=3).value = all_dic[city]['title']
         sheet.cell(row=shift, column=4).value = all_dic[city]['ma_num']
         sheet.cell(row=shift, column=5).value = all_dic[city]['people_num']
-        column6 = int(round(float(all_dic[city]['people_num']) / all_dic[city]['ma_num'] * 100))
+        column6 = int(round(float(all_dic[city]['people_num'] + 1) / all_dic[city]['ma_num'] * 100))
         sheet.cell(row=shift, column=6).value = str(column6) + '%'
         sheet.cell(row=shift, column=7).value = all_dic[city]['ticket_num']
         column8 = int(round(float(all_dic[city]['ticket_num']) / all_dic[city]['ma_num'] * 100))
